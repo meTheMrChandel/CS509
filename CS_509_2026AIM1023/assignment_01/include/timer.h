@@ -6,10 +6,10 @@
 using Clock = std::chrono::high_resolution_clock;
 using TimePoint = std::chrono::time_point<Clock>;
 
-// Start the timer
+// Start Timer for Algo to run
 TimePoint startTimer();
 
-// Stop the timer and return elapsed time in milliseconds
+// Stop Timer for Algo to stop
 double stopTimer(TimePoint start);
 
 #endif

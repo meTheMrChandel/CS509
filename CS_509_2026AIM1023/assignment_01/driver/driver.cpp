@@ -10,7 +10,7 @@ int main() {
     int M, K, N;
 
     std::string filename = "tests/gemm_test_01.txt";
-    std::cout << "Reading file: " << filename << std::endl;
+
     if (!readMatrices(filename, A, B, M, K, N)) {
         return 1;
     }
@@ -20,9 +20,9 @@ int main() {
     int choice;
     int blockSize = 0;
 
-    std::cout << "=============================\n";
+    std::cout << "==============****==============\n";
     std::cout << "      GEMM Simulator\n";
-    std::cout << "=============================\n";
+    std::cout << "==============****===========\n";
     std::cout << "1. Simple GEMM\n";
     std::cout << "2. Blocking GEMM\n";
     std::cout << "Enter Choice: ";
@@ -33,8 +33,8 @@ int main() {
         std::cin >> blockSize;
     }
 
-    // Start timing ONLY the algorithm
-    TimePoint start = startTimer();
+    // Start timng onlY the algorithm
+    TimePoint startTimePoint = startTimer();
 
     switch (choice) {
 
@@ -51,14 +51,11 @@ int main() {
             return 1;
     }
 
-    double elapsedTime = stopTimer(start);
+    double timeTakenByAlgo = stopTimer(startTimePoint);
 
-    std::cout << "\nResult Matrix\n";
+    std::cout<<"Resultant Matrix"<<std::endl;
     printMatrix(C);
-
-    std::cout << "\nExecution Time : "
-              << elapsedTime
-              << " microseconds\n";
+    std::cout << "\nExecution Time : "<< timeTakenByAlgo<< " microseconds\n";
 
     return 0;
 }
