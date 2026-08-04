@@ -1,14 +1,15 @@
-#ifndef MATRIX_H
-#define MATRIX_H
+#ifndef MX_H
+#define MX_H
 
 #include <vector>
 #include <string>
-//Acting as Matrix reading file 
+//Using Matrix instead of writting 2d vector again and again
+
 using Matrix = std::vector<std::vector<int>>;
 
 
-bool readMatrices(const std::string& filename,Matrix& A,Matrix& B,int& M, int& K, int& N);
+bool matrixRead(const std::string& filename,Matrix& A,Matrix& B,int& M, int& K, int& N);
 Matrix createMatrix(int rows, int cols);
-void printMatrix(const Matrix& matrix);
+void printMatrix(Matrix& matrix);
 
 #endif

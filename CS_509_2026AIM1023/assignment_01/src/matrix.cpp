@@ -7,7 +7,8 @@ Matrix createMatrix(int rows, int cols) {
     return Matrix(rows, std::vector<int>(cols, 0));
 }
 
-bool readMatrices(const std::string& name,Matrix& A,Matrix& B,int& M,int& K,int& N) {
+// Taking matrix input
+bool matrixRead(const std::string& name,Matrix& A,Matrix& B,int& M,int& K,int& N) {
 
     std::ifstream fin(name);
 
