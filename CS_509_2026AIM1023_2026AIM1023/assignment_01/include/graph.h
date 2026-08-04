@@ -12,8 +12,14 @@ struct Edge
 
 using AdjList = std::vector<std::vector<Edge>>;
 
-bool readGraph(const std::string& filename,
-               AdjList& graph,
-               int& vertices);
+// For BFS and DFS
+bool readUnweightedGraph(const std::string& filename,
+                         AdjList& graph,
+                         int& vertices);
+
+// For Dijkstra
+bool readWeightedGraph(const std::string& filename,
+                       AdjList& graph,
+                       int& vertices);
 
 #endif
