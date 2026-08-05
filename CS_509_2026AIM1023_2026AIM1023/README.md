@@ -7,7 +7,7 @@ This repository contains buddy (pair) assignments for CS509 . Assignment 01 impl
 ## Student / Pair Details
 
 - **Student 1:** Vishal Chandel (2026AIM1023)
-- **Student 2:** (Buddy partner entry number)
+- **Student 2:** ----------------------------
 - **Program:** M.Tech Artificial Intelligence, IIT Ropar
 
 ## Language and Environment
