@@ -2,7 +2,7 @@
 
 ## Repository Overview
 
-This repository contains buddy (pair) assignments for CS509 - Parallel Computer Architecture. Assignment 01 implements BFS, DFS, and SSSP (Dijkstra) on graphs stored in CSR (Compressed Sparse Row) format.
+This repository contains buddy (pair) assignments for CS509 . Assignment 01 implements BFS, DFS, and SSSP (Dijkstra) on graphs stored in CSR (Compressed Sparse Row) format.
 
 ## Student / Pair Details
 
