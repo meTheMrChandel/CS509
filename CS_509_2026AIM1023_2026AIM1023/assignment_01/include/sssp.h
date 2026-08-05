@@ -2,7 +2,15 @@
 #define SSSP_H
 
 #include "csr.h"
+#include <vector>
 
-void dijkstra(const CSRGraph& graph, int source);
+// Struct storing outcomes of Dijkstra Single-Source Shortest Path.
+struct SSSPResult
+{
+    std::vector<int> v_distances; // Shortest path distance from source to each vertex.
+};
 
-#endif 
+// Computes Dijkstra's SSSP over a CSR Graph starting from i_source.
+SSSPResult dijkstra(const CSRGraph& struct_graph, int i_source);
+
+#endif // SSSP_H

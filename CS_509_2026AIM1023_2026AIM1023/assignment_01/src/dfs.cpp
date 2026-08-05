@@ -1,38 +1,38 @@
 #include "../include/dfs.h"
 
-#include <iostream>
-#include <vector>
-
-void dfsHelper(const CSRGraph& graph,
-               int current,
-               std::vector<bool>& visited)
+// Recursive helper method to perform Depth-First Search exploration.
+static void dfs_helper(const CSRGraph& struct_graph, int i_current, std::vector<bool>& v_visited,
+                       std::vector<int>& v_traversal)
 {
-    visited[current] = true;
+    v_visited[i_current] = true;
+    v_traversal.push_back(i_current);
 
-    std::cout << current << " ";
+    int i_edge_start = struct_graph.v_row_ptr[i_current];
+    int i_edge_end = struct_graph.v_row_ptr[i_current + 1];
 
-    for (int i = graph.rowPtr[current];
-         i < graph.rowPtr[current + 1];
-         i++)
+    // Traverse all adjacent edge connections.
+    for (int i_idx = i_edge_start; i_idx < i_edge_end; ++i_idx)
     {
-        int neighbour = graph.colIndex[i];
+        int i_neighbour = struct_graph.v_col_index[i_idx];
 
-        if (!visited[neighbour])
+        // Recurse on unvisited paths.
+        if (!v_visited[i_neighbour])
         {
-            dfsHelper(graph, neighbour, visited);
+            dfs_helper(struct_graph, i_neighbour, v_visited, v_traversal);
         }
     }
 }
 
-void dfs(const CSRGraph& graph, int source)
+// Depth-First Search (DFS) traversal implementation on a CSR representation.
+DFSResult dfs(const CSRGraph& struct_graph, int i_source)
 {
-    int vertices = graph.rowPtr.size() - 1;
+    int i_vertex_count = static_cast<int>(struct_graph.v_row_ptr.size()) - 1;
 
-    std::vector<bool> visited(vertices, false);
+    DFSResult struct_result;
+    struct_result.v_traversal.reserve(i_vertex_count);
 
-    std::cout << "DFS Traversal: ";
+    std::vector<bool> v_visited(i_vertex_count, false);
+    dfs_helper(struct_graph, i_source, v_visited, struct_result.v_traversal);
 
-    dfsHelper(graph, source, visited);
-
-    std::cout << std::endl;
+    return struct_result;
 }

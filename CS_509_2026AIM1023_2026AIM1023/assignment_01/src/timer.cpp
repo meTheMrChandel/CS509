@@ -1,13 +1,14 @@
 #include "../include/timer.h"
 
-TimePoint startTimer()
+// Start timing using high-resolution clock now.
+TimePoint start_timer()
 {
     return Clock::now();
 }
 
-double stopTimer(TimePoint start)
+// Stop timing and compute duration count in milliseconds.
+double stop_timer(TimePoint t_start)
 {
-    TimePoint end = Clock::now();
-
-    return std::chrono::duration<double, std::milli>(end - start).count();
+    TimePoint t_end = Clock::now();
+    return std::chrono::duration<double, std::milli>(t_end - t_start).count();
 }

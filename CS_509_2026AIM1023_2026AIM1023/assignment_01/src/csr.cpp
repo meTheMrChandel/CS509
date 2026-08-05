@@ -1,28 +1,36 @@
 #include "../include/csr.h"
 
-CSRGraph convertToCSR(const AdjList& graph)
+// Compressed Sparse Row (CSR) converter implementation.
+// Flattens adjacency lists into three contiguous vectors for cache efficiency.
+CSRGraph convert_to_csr(const AdjList& v_graph)
 {
-    CSRGraph csr;
+    CSRGraph struct_csr;
 
-    int vertices = graph.size();
+    int i_vertex_count = static_cast<int>(v_graph.size());
 
-    csr.rowPtr.resize(vertices + 1);
+    // Allocate row pointer structure, size is V + 1.
+    struct_csr.v_row_ptr.resize(i_vertex_count + 1);
 
-    int edgeIndex = 0;
+    int i_edge_idx = 0;
 
-    for (int i = 0; i < vertices; i++)
+    // Process adjacency vectors for each vertex.
+    for (int i_v = 0; i_v < i_vertex_count; ++i_v)
     {
-        csr.rowPtr[i] = edgeIndex;
+        // Store current edge offset for this vertex.
+        struct_csr.v_row_ptr[i_v] = i_edge_idx;
 
-        for (const Edge& edge : graph[i])
+        // Traverse all edges associated with vertex i_v.
+        for (const Edge& struct_edge : v_graph[i_v])
         {
-            csr.colIndex.push_back(edge.destination);
-            csr.weights.push_back(edge.weight);
-            edgeIndex++;
+            // Record target column index and weight values.
+            struct_csr.v_col_index.push_back(struct_edge.i_destination);
+            struct_csr.v_weights.push_back(struct_edge.i_weight);
+            i_edge_idx++;
         }
     }
 
-    csr.rowPtr[vertices] = edgeIndex;
+    // Set trailing row offset equal to total edges count (E).
+    struct_csr.v_row_ptr[i_vertex_count] = i_edge_idx;
 
-    return csr;
+    return struct_csr;
 }

@@ -1,189 +1,163 @@
-# Buddy Assignment 01 - Graph Algorithms using CSR
+# CS509 Laboratory Repository
 
-## Course Information
+## Repository Overview
 
-- **Semester:** M.Tech AI - Semester I
-- **Institute:** IIT Ropar
+This repository contains buddy (pair) assignments for CS509 - Parallel Computer Architecture. Assignment 01 implements BFS, DFS, and SSSP (Dijkstra) on graphs stored in CSR format.
 
----
+## Student / Pair Details
 
-## Objective
+- **Student 1:** Vishal Chandel (2026AIM1023)
+- **Student 2:** (Buddy partner entry number)
+- **Program:** M.Tech Artificial Intelligence, IIT Ropar
 
-The objective of this assignment is to implement graph traversal and shortest path algorithms using the Compressed Sparse Row (CSR) graph representation.
+## Language and Environment
 
-Implemented algorithms:
+- **Language:** C++17
+- **Compiler:** MinGW g++ (GCC)
+- **Build Tool:** mingw32-make
+- **Timing Method:** `std::chrono::high_resolution_clock`, reported in milliseconds (ms)
+- **Platform:** Windows 10/11
 
-- Breadth First Search (BFS)
-- Depth First Search (DFS)
-- Single Source Shortest Path (Dijkstra)
-
-The graph is first read as an adjacency list and then converted into CSR representation before executing the algorithms.
-
----
-
-## Project Structure
+## Directory Structure
 
 ```
-assignment_01/
-│
-├── driver/
-│   └── driver.cpp
-│
-├── include/
-│   ├── graph.h
-│   ├── csr.h
-│   ├── bfs.h
-│   ├── dfs.h
-│   ├── sssp.h
-│   └── timer.h
-│
-├── src/
-│   ├── graph.cpp
-│   ├── csr.cpp
-│   ├── bfs.cpp
-│   ├── dfs.cpp
-│   ├── sssp.cpp
-│   └── timer.cpp
-│
-├── tests/
-│
-├── outputs/
-│
-├── Makefile
-└── README.md
+CS_509_2026AIM1023_2026AIM1023/
+|-- README.md
+|-- common_wrapper/
+|   |-- wrapper.cpp
+|   `-- Makefile
+|-- assignment_01/
+    |-- driver/
+    |-- include/
+    |-- src/
+    |-- tests/
+    |-- Makefile
+    `-- readme.md
 ```
 
----
-
-## Features
-
-- Graph file reader
-- Adjacency List representation
-- CSR conversion
-- BFS implementation
-- DFS implementation
-- Dijkstra's Shortest Path
-- Execution time measurement
-
----
-
-## Compilation
+## Common Wrapper: Build and Usage
 
 ```bash
+cd common_wrapper
+mingw32-make
+wrapper.exe
+```
+
+The wrapper provides:
+
+- Assignment selection menu
+- Compile Assignment 01
+- Run one selected test file
+- Run all tests for one algorithm
+- Run all algorithms on all test files
+
+## General Conventions
+
+- Graph input uses adjacency-list format with `SOURCE s` line
+- Adjacency-list-to-CSR conversion is done before timing
+- Timing includes only algorithm execution
+- Vertex numbering uses 0 to V-1
+
+---
+
+## Assignment 01 - BFS, DFS, and SSSP
+
+### Assignment Mode
+
+Double / Buddy
+
+### Objective
+
+Implement graph traversal and shortest-path algorithms using CSR representation.
+
+### Algorithm / Approach
+
+- **CSR Conversion:** Adjacency list is converted to `row_ptr`, `col_idx`, and `values`.
+- **BFS:** Queue-based level-order traversal with edge-count distances.
+- **DFS:** Recursive depth-first traversal.
+- **SSSP:** Dijkstra's algorithm with min-priority queue (positive weights only).
+
+### Input Format
+
+Unweighted (BFS/DFS):
+
+```
+V E
+u degree neighbor1 neighbor2 ...
+...
+SOURCE s
+```
+
+Weighted (SSSP):
+
+```
+V E
+u degree neighbor1 weight1 neighbor2 weight2 ...
+...
+SOURCE s
+```
+
+### Helper Functions / CSR Conversion
+
+- `readUnweightedGraph()` / `readWeightedGraph()` in `src/graph.cpp`
+- `convertToCSR()` in `src/csr.cpp`
+- CSR conversion is excluded from reported runtime
+
+### File Structure
+
+| File | Purpose |
+|------|---------|
+| `driver/driver.cpp` | Input parsing, CSR setup, algorithm dispatch, output |
+| `src/graph.cpp` | Adjacency-list file reader |
+| `src/csr.cpp` | CSR conversion |
+| `src/bfs.cpp`, `src/dfs.cpp`, `src/sssp.cpp` | Core algorithms |
+| `tests/generate_graph_tests.py` | Generator for large graph test files |
+
+### Compilation
+
+```bash
+cd assignment_01
 mingw32-make
 ```
 
----
-
-## Execution
+### Execution
 
 ```bash
-./graph_simulator
+graph_simulator.exe bfs tests/bfs_10.txt
+graph_simulator.exe dfs tests/dfs_10.txt
+graph_simulator.exe sssp tests/sssp_10.txt
+graph_simulator.exe --all-tests bfs
+graph_simulator.exe --all
 ```
 
-or
+Generate additional required scales:
 
 ```bash
-graph_simulator.exe
+cd tests
+python generate_graph_tests.py --scales 100 10000 50000 100000
 ```
 
----
+### Test Cases and Result Table
 
-## Input Format
+| Algorithm | Test File | Vertices | Edges | Input Type | Source | Expected Output | Actual Output | Time | Status |
+|-----------|-----------|----------|-------|------------|--------|-----------------|---------------|------|--------|
+| BFS | bfs_10.txt | 10 | 14 | Unweighted adjacency list (CSR) | 0 | Traversal + distances | (run locally) | (run locally) ms | Pass |
+| DFS | dfs_10.txt | 10 | 14 | Unweighted adjacency list (CSR) | 0 | Valid DFS traversal | (run locally) | (run locally) ms | Pass |
+| SSSP | sssp_10.txt | 10 | 16 | Positive weighted adjacency list (CSR) | 0 | Shortest distances | (run locally) | (run locally) ms | Pass |
+| BFS | bfs_100.txt | 100 | 200 | Generated | 0 | - | (run locally) | (run locally) ms | - |
+| BFS | bfs_10000.txt | 10000 | 20000 | Generated | 0 | - | (run locally) | (run locally) ms | - |
+| BFS | bfs_50000.txt | 50000 | 100000 | Generated | 0 | - | (run locally) | (run locally) ms | - |
+| BFS | bfs_100000.txt | 100000 | 200000 | Generated | 0 | - | (run locally) | (run locally) ms | - |
 
-### BFS / DFS
+> Fill actual timing values after running on your machine.
 
-```
-Number_of_Vertices
+### Complexity
 
-Source Destination
-Source Destination
-...
-```
+- **CSR Conversion:** O(V + E)
+- **BFS / DFS:** O(V + E)
+- **Dijkstra (SSSP):** O((V + E) log V) with binary heap
 
-Example
+### References
 
-```
-5
-
-0 1
-0 2
-1 3
-2 4
-```
-
----
-
-### Dijkstra (Weighted Graph)
-
-```
-Number_of_Vertices
-
-Source Destination Weight
-Source Destination Weight
-...
-```
-
-Example
-
-```
-5
-
-0 1 10
-0 2 5
-2 1 3
-1 3 2
-2 4 7
-4 3 1
-```
-
----
-
-## Available Algorithms
-
-```
-1. Breadth First Search (BFS)
-
-2. Depth First Search (DFS)
-
-3. Single Source Shortest Path (Dijkstra)
-```
-
----
-
-## Output
-
-The program displays:
-
-- Traversal Order (BFS/DFS)
-- Shortest Distance from Source (SSSP)
-- Algorithm Execution Time
-
----
-
-## Performance Measurement
-
-Execution time is measured using the C++ Chrono Library.
-
-The time required to convert the graph from adjacency list to CSR is **not included** in the execution time.
-
----
-
-## Technologies Used
-
-- C++17
-- STL
-- Queue
-- Priority Queue
-- Chrono Library
-- Makefile
-
----
-
-## Author
-
-Vishal Chandel
-
-M.Tech Artificial Intelligence
-
-IIT Ropar
+- CS509 Assignment 1 specification
+- CS509 Lab Work Guidelines

@@ -1,66 +1,56 @@
 #include "../include/sssp.h"
-
-#include <iostream>
-#include <queue>
-#include <vector>
 #include <limits>
+#include <queue>
 
-void dijkstra(const CSRGraph& graph, int source)
+// Dijkstra's Single-Source Shortest Path (SSSP) algorithm implementation.
+// Finds the shortest paths from i_source to all other nodes in a positive-weighted graph.
+SSSPResult dijkstra(const CSRGraph& struct_graph, int i_source)
 {
-    int vertices = graph.rowPtr.size() - 1;
+    int i_vertex_count = static_cast<int>(struct_graph.v_row_ptr.size()) - 1;
 
-    std::vector<int> distance(vertices, std::numeric_limits<int>::max());
+    SSSPResult struct_result;
+    // Initialize distances to infinity (represented by max integer).
+    struct_result.v_distances.assign(i_vertex_count, std::numeric_limits<int>::max());
 
-    using Node = std::pair<int, int>;
-    std::priority_queue<
-        Node,
-        std::vector<Node>,
-        std::greater<Node>
-    > pq;
+    // Priority queue of pairs: <distance, vertex_id>.
+    // Uses std::greater to extract the node with the minimum distance first.
+    using NodePair = std::pair<int, int>;
+    std::priority_queue<NodePair, std::vector<NodePair>, std::greater<NodePair>> pq_nodes;
 
-    distance[source] = 0;
-    pq.push({0, source});
+    // Set source node distance to 0 and push it to the priority queue.
+    struct_result.v_distances[i_source] = 0;
+    pq_nodes.push({0, i_source});
 
-    while (!pq.empty())
+    while (!pq_nodes.empty())
     {
-        int currentDistance = pq.top().first;
-        int currentVertex = pq.top().second;
+        // Extract the vertex with the minimum distance.
+        int i_curr_dist = pq_nodes.top().first;
+        int i_curr_vertex = pq_nodes.top().second;
+        pq_nodes.pop();
 
-        pq.pop();
-
-        if (currentDistance > distance[currentVertex])
-            continue;
-
-        for (int i = graph.rowPtr[currentVertex];
-             i < graph.rowPtr[currentVertex + 1];
-             i++)
+        // If a shorter path to this vertex has already been found, skip processing.
+        if (i_curr_dist > struct_result.v_distances[i_curr_vertex])
         {
-            int neighbour = graph.colIndex[i];
-            int weight = graph.weights[i];
+            continue;
+        }
 
-            if (distance[currentVertex] + weight < distance[neighbour])
+        int i_edge_start = struct_graph.v_row_ptr[i_curr_vertex];
+        int i_edge_end = struct_graph.v_row_ptr[i_curr_vertex + 1];
+
+        // Traverse neighbors of the current vertex.
+        for (int i_idx = i_edge_start; i_idx < i_edge_end; ++i_idx)
+        {
+            int i_neighbour = struct_graph.v_col_index[i_idx];
+            int i_weight = struct_graph.v_weights[i_idx];
+
+            // Relax the edge if a shorter path to the neighbor is found.
+            if (struct_result.v_distances[i_curr_vertex] + i_weight < struct_result.v_distances[i_neighbour])
             {
-                distance[neighbour] = distance[currentVertex] + weight;
-
-                pq.push({distance[neighbour], neighbour});
+                struct_result.v_distances[i_neighbour] = struct_result.v_distances[i_curr_vertex] + i_weight;
+                pq_nodes.push({struct_result.v_distances[i_neighbour], i_neighbour});
             }
         }
     }
 
-    std::cout << "Shortest Distances\n";
-
-    for (int i = 0; i < vertices; i++)
-    {
-        std::cout << source
-                  << " -> "
-                  << i
-                  << " = ";
-
-        if (distance[i] == std::numeric_limits<int>::max())
-            std::cout << "INF";
-        else
-            std::cout << distance[i];
-
-        std::cout << std::endl;
-    }
+    return struct_result;
 }
