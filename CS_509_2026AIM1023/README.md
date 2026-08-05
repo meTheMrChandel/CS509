@@ -2,7 +2,7 @@
 
 ## Repository Overview
 
-This repository contains individual assignments for CS509 - Parallel Computer Architecture. Assignment 01 implements General Matrix Multiplication (GEMM) using both simple and blocking algorithms.
+This repository contains individual assignments for CS509 - PG Software Lab. Assignment 01 implements General Matrix Multiplication (GEMM) using both simple and blocking algorithms.
 
 ## Student Details
 
