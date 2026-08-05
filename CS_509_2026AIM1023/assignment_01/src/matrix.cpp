@@ -1,55 +1,63 @@
 #include "../include/matrix.h"
-
 #include <fstream>
 #include <iostream>
 
-Matrix createMatrix(int rows, int cols) {
-    return Matrix(rows, std::vector<int>(cols, 0));
+// Helper to instantiate a 2D vector with dimensions i_rows x i_cols.
+Matrix create_matrix(int i_rows, int i_cols)
+{
+    return Matrix(i_rows, std::vector<int>(i_cols, 0));
 }
 
-// Taking matrix input
-bool matrixRead(const std::string& name,Matrix& A,Matrix& B,int& M,int& K,int& N) {
+// Opens the specified file and parses matrix parameters and data values.
+bool matrix_read(const std::string& str_filename, Matrix& mat_a, Matrix& mat_b, int& i_m, int& i_k, int& i_n)
+{
+    std::ifstream stream_fin(str_filename);
 
-    std::ifstream fin(name);
-
-    if (!fin.is_open()) {
-        std::cout<<"\nUnable to Open file\n";
+    // Make sure the file exists and is readable.
+    if (!stream_fin.is_open())
+    {
+        std::cerr << "Error: Unable to open matrix file " << str_filename << std::endl;
         return false;
     }
 
-    //Dimension of Matrix
-    fin >> M >> K >> N;
+    // Read dimensions: matrix A is i_m x i_k, matrix B is i_k x i_n.
+    stream_fin >> i_m >> i_k >> i_n;
 
-    // Create matrices
-    A = createMatrix(M, K);
-    B = createMatrix(K, N);
+    // Resize matrix buffers to read elements correctly.
+    mat_a = create_matrix(i_m, i_k);
+    mat_b = create_matrix(i_k, i_n);
 
-    // Matix A
-    for (int i = 0; i < M; i++) {
-        for (int j = 0; j < K; j++) {
-            fin >> A[i][j];
+    // Extract row-major values for Matrix A.
+    for (int i_row = 0; i_row < i_m; ++i_row)
+    {
+        for (int i_col = 0; i_col < i_k; ++i_col)
+        {
+            stream_fin >> mat_a[i_row][i_col];
         }
     }
 
-    //Matrix B
-    for (int i = 0; i < K; i++) {
-        for (int j = 0; j < N; j++) {
-            fin >> B[i][j];
+    // Extract row-major values for Matrix B.
+    for (int i_row = 0; i_row < i_k; ++i_row)
+    {
+        for (int i_col = 0; i_col < i_n; ++i_col)
+        {
+            stream_fin >> mat_b[i_row][i_col];
         }
     }
 
-    fin.close();
+    stream_fin.close();
     return true;
 }
 
-void printMatrix(const Matrix& matrix) {
-
-    for (auto row : matrix) {
-
-        for (int value : row) {
-            std::cout << value << " ";
+// Output matrix values row by row to standard terminal output.
+void print_matrix(const Matrix& mat_matrix)
+{
+    for (const auto& v_row : mat_matrix)
+    {
+        for (int i_val : v_row)
+        {
+            std::cout << i_val << " ";
         }
-
-        std::cout << std::endl;
+        std::cout << "\n";
     }
 }

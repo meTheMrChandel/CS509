@@ -1,11 +1,14 @@
-#ifndef G_H
-#define G_H
+#ifndef GEMM_H
+#define GEMM_H
 
 #include "matrix.h"
 
-// Brute Force Algo For Matrix Multiplication
-void gemmSimple(Matrix& A,  Matrix& B, Matrix& C, int M, int K, int N);
-// Optimised One for Matirx Multiplication
-void gemmBlocking( Matrix& A, Matrix& B, Matrix& C, int M, int K,int N, int blockSize);
+// Refactored Simple General Matrix Multiplication (GEMM) declaration.
+// Uses type-prefixed snake_case for parameters.
+void gemm_simple(const Matrix& mat_a, const Matrix& mat_b, Matrix& mat_c, int i_m, int i_k, int i_n);
 
-#endif
+// Refactored Cache-Blocking General Matrix Multiplication (GEMM) declaration.
+// Uses type-prefixed snake_case for parameters.
+void gemm_blocking(const Matrix& mat_a, const Matrix& mat_b, Matrix& mat_c, int i_m, int i_k, int i_n, int i_block_size);
+
+#endif // GEMM_H

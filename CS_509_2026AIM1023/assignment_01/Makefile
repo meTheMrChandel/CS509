@@ -15,4 +15,6 @@ $(TARGET): $(SRC)
 	$(CXX) $(CXXFLAGS) $(SRC) $(INC) -o $(TARGET)
 
 clean:
-	rm -f $(TARGET)
+	del /Q $(TARGET).exe 2>nul || rm -f $(TARGET)
+
+.PHONY: clean

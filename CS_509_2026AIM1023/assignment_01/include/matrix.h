@@ -1,15 +1,19 @@
-#ifndef MX_H
-#define MX_H
+#ifndef MATRIX_H
+#define MATRIX_H
 
-#include <vector>
 #include <string>
-//Using Matrix instead of writting 2d vector again and again
+#include <vector>
 
+// Matrix type alias representing a 2D integer vector.
 using Matrix = std::vector<std::vector<int>>;
 
+// Create a matrix of size i_rows x i_cols initialized to 0.
+Matrix create_matrix(int i_rows, int i_cols);
 
-bool matrixRead(const std::string& filename,Matrix& A,Matrix& B,int& M, int& K, int& N);
-Matrix createMatrix(int rows, int cols);
-void printMatrix(Matrix& matrix);
+// Read matrix data from input file. Sets dimensions and loads content.
+bool matrix_read(const std::string& str_filename, Matrix& mat_a, Matrix& mat_b, int& i_m, int& i_k, int& i_n);
 
-#endif
+// Print matrix rows and columns to stdout.
+void print_matrix(const Matrix& mat_matrix);
+
+#endif // MATRIX_H

@@ -1,15 +1,16 @@
-#ifndef TMR_H
-#define TMR_H
+#ifndef TIMER_H
+#define TIMER_H
 
 #include <chrono>
 
+// Simplify high-resolution timing types.
 using Clock = std::chrono::high_resolution_clock;
 using TimePoint = std::chrono::time_point<Clock>;
 
-// Start Timer for Algo to run
-TimePoint startTimer();
+// Returns current high-resolution timepoint.
+TimePoint start_timer();
 
-// Stop Timer for Algo to stop
-double stopTimer(TimePoint start);
+// Computes elapsed milliseconds since t_start.
+double stop_timer(TimePoint t_start);
 
-#endif
+#endif // TIMER_H

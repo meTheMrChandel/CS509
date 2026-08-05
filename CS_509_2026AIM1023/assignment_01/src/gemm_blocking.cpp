@@ -1,30 +1,49 @@
 #include "../include/gemm.h"
+#include <algorithm>
 
-#include <bits/stdc++.h>
-// Matrix here is 2D vector as mentioned in matrix.h file
-void gemmBlocking( Matrix& A, Matrix& B,Matrix& C,int M,int K,int N,int blockSize)
+// Tiled/Blocked General Matrix Multiplication (GEMM) implementation.
+// Divides the matrices into smaller blocks (tiles) of size i_block_size x i_block_size.
+// This increases temporal locality by reusing data stored in the cache.
+void gemm_blocking(const Matrix& mat_a, const Matrix& mat_b, Matrix& mat_c, int i_m, int i_k, int i_n, int i_block_size)
 {
-    //initialising the matrix with 0
-    for (int i = 0; i < M; i++) {
-        for (int j = 0; j < N; j++) {
-            C[i][j] = 0;
+    // Handle invalid block sizes gracefully using a default value of 32.
+    if (i_block_size <= 0)
+    {
+        i_block_size = 32;
+    }
+
+    // Initialize all values in the output matrix to zero.
+    for (int i_row = 0; i_row < i_m; ++i_row)
+    {
+        for (int i_col = 0; i_col < i_n; ++i_col)
+        {
+            mat_c[i_row][i_col] = 0;
         }
     }
 
-    // starssen matrix multiplication
-    for (int i = 0; i < M; i += blockSize) {
-        for (int j = 0; j < N; j += blockSize) {
-            for (int k = 0; k < K; k += blockSize) {
+    // Outer loops iterate over the matrix tiles.
+    for (int i_tile_row = 0; i_tile_row < i_m; i_tile_row += i_block_size)
+    {
+        for (int i_tile_col = 0; i_tile_col < i_n; i_tile_col += i_block_size)
+        {
+            for (int i_tile_idx = 0; i_tile_idx < i_k; i_tile_idx += i_block_size)
+            {
+                // Determine the boundaries for the current block (prevents index out-of-bounds).
+                int i_row_limit = std::min(i_tile_row + i_block_size, i_m);
+                int i_col_limit = std::min(i_tile_col + i_block_size, i_n);
+                int i_idx_limit = std::min(i_tile_idx + i_block_size, i_k);
 
-                int iLast = std::min(i + blockSize, M);
-                int jLast = std::min(j + blockSize, N);
-                int kLast = std::min(k + blockSize, K);
-
-                for (int i1 = i; i1 < iLast; i1++) {
-                    for (int j1 = j; j1 < jLast; j1++) {
-                        for (int k1 = k; k1 < kLast; k1++) {
-                            C[i1][j1] += A[i1][k1] * B[k1][j1];
+                // Inner loops perform standard matrix multiplication inside the sub-blocks/tiles.
+                for (int i_row = i_tile_row; i_row < i_row_limit; ++i_row)
+                {
+                    for (int i_col = i_tile_col; i_col < i_col_limit; ++i_col)
+                    {
+                        int i_temp_sum = 0;
+                        for (int i_idx = i_tile_idx; i_idx < i_idx_limit; ++i_idx)
+                        {
+                            i_temp_sum += mat_a[i_row][i_idx] * mat_b[i_idx][i_col];
                         }
+                        mat_c[i_row][i_col] += i_temp_sum;
                     }
                 }
             }
